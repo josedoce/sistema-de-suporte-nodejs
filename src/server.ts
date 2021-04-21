@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 const app = express();
-
+import './database';
+import { routes } from './routes';
 /*
     GET = Busca
     POST = Criação
@@ -11,15 +12,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req:Request, res: Response)=>{
-    res.json({nome: 'joseildo'});
-});
-
-app.post('/', (req: Request, res: Response)=>{
-    res.json({
-        message: 'Usuario salvo com sucesso.',
-        ...req.body
-    });
-});
+app.use(routes);
 
 app.listen(3333, ()=>console.log('conectado.'));
