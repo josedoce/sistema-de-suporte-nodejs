@@ -1,17 +1,14 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 
-@Entity('settings')
-class Setting{
+@Entity('users')
+class User{
 
     @PrimaryColumn()
     readonly id: string;
 
     @Column()
-    username: string;
-
-    @Column()
-    chat: boolean;
+    email: string;
 
     @UpdateDateColumn()
     updated_at: Date;
@@ -26,4 +23,4 @@ class Setting{
     }
 }
 
-export { Setting };
+export {User};
