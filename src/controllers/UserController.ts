@@ -1,5 +1,5 @@
 import {Response, Request} from 'express';
-import { UserService } from '../services/UserService';
+import {UserService} from '../services/UserService';
 
 class UserController{
     async index(req: Request, res: Response): Promise<Response>{
