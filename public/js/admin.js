@@ -1,6 +1,6 @@
 const socket = io();
-
 let connectionsUsers = [];
+let connectionInSupport = [];
 
 socket.on("admin_list_all_users", (connections) => {
   connectionsUsers = connections;
@@ -22,7 +22,7 @@ function call(id) {//id será usado para atender
   const connection = connectionsUsers.find(
     (connection) => connection.socket_id === id
   );
-  
+  connectionInSupport.push(connection);
   const template = document.getElementById("admin_template").innerHTML;
 
   const rendered = Mustache.render(template, {
@@ -93,11 +93,11 @@ function sendMessage(id) {
 }
 
 socket.on("admin_receive_message", (data) => {
-  
-  const connection = connectionsUsers.find(
-    (connection) => (connection.socket_id = data.socket_id)
+  //console.log(data)
+  const connection = connectionInSupport.find(
+    connection => connection.socket_id === data.socket_id,
   );
-  console.log(connection)
+  console.log(data)
   const divMessages = document.getElementById(
     `allMessages${connection.user_id}`
   );
