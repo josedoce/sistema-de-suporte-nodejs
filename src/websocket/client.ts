@@ -9,12 +9,12 @@ interface IParams{
     email: string;
 }
 
-io.on('connect',(socket:Socket)=>{
+io.on('connect',(socket:Socket)=>{//on é um evento
     
     const connectionsService = new ConnectionsService();
     const usersService = new UserService();
     const messagesService = new MessageService();
-    
+    //socket = o usuario atual conectado.
     socket.on("client_first_access", async (params)=>{ //será emitivo em direção a esta funçao
         const socket_id = socket.id;
         const {text, email} = params as IParams;
@@ -53,5 +53,29 @@ io.on('connect',(socket:Socket)=>{
             text,
             user_id
         });
+        const allMessages = await messagesService.listByUser(user_id);
+        //aqui emitirei para o fronteds todas as messagens
+        socket.emit('client_list_all_messages',allMessages);
+
+        const allUsers = await connectionsService.findAllWithoutAdmin();
+        io.emit('admin_list_all_users',allUsers);
     });
+    socket.on('client_send_to_admin',async (params)=>{
+        const {text, socket_admin_id} = params;
+        
+        const socket_id = socket.id;
+
+        const {user_id} = await connectionsService.findBySocketId(socket_id);
+        
+        const message = await messagesService.create({
+            text,
+            user_id
+        });
+        
+        //enviando estes dados do cliente para o adm
+        io.to(socket_admin_id).emit('admin_receive_message',{
+            message,
+            socket_id
+        });
+    })
 });
